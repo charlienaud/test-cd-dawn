@@ -4,6 +4,8 @@ on:
   pull_request:
     types:
         - opened
+        - synchronize
+        - reopened
 
 jobs:
   deploy:
@@ -27,4 +29,4 @@ jobs:
           # Password generated from Theme Access app
           SHOPIFY_CLI_THEME_TOKEN: ${{ secrets.SHOPIFY_CLI_THEME_TOKEN }}
           SHOPIFY_CLI_TTY: 0
-        run: shopify theme push --path "./" --unpublished --json --name "PR-${{ github.event.pull_request.number }}"
+        run: shopify theme push --path "./" --unpublished --json --theme "PR-${{ github.event.pull_request.number }}"
