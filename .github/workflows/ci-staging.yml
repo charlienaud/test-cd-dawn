@@ -31,7 +31,7 @@ jobs:
     needs:
       - theme-check
     outputs:
-      theme_output_json: ${{ steps.preview_deploy.outputs.theme_output_jsonest }} # {"theme":{"id":158700077362,"name":"PR-1","role":"unpublished","shop":"yoozio-ci.myshopify.com","editor_url":"https://yoozio-ci.myshopify.com/admin/themes/158700077362/editor","preview_url":"https://yoozio-ci.myshopify.com/?preview_theme_id=158700077362"}}
+      theme_output_json: ${{ steps.preview_deploy.outputs.theme_output_json }} # {"theme":{"id":158700077362,"name":"PR-1","role":"unpublished","shop":"yoozio-ci.myshopify.com","editor_url":"https://yoozio-ci.myshopify.com/admin/themes/158700077362/editor","preview_url":"https://yoozio-ci.myshopify.com/?preview_theme_id=158700077362"}}
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
@@ -53,7 +53,7 @@ jobs:
           SHOPIFY_CLI_TTY: 0
         run: |
           THEME_OUTPUT_JSON=$(shopify theme push --path "./" --unpublished --json --theme "PR-${{ github.event.pull_request.number }}" | jq -s -c '.[0]') && \
-          echo "::set-output name=theme_output_json::$THEME_OUTPUT_JSON"
+          echo "theme_output_json=$THEME_OUTPUT_JSON" >> $GITHUB_OUTPUT
   update-pr:
     name: Enrich the PR with jobs infos
     runs-on: ubuntu-latest
