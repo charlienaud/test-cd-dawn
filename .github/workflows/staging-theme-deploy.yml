@@ -46,5 +46,9 @@ jobs:
         uses: peter-evans/create-or-update-comment@v3
         with:
           issue-number: ${{ github.event.pull_request.number }}
-          body: ${{ fromJson(steps.preview_deploy.outputs.theme_output_json).theme.preview_url }}
+          body: |
+            Theme preview `${{ fromJson(steps.preview_deploy.outputs.theme_output_json).theme.name }}` successfully created
+            
+            Preview URL: ${{ fromJson(steps.preview_deploy.outputs.theme_output_json).theme.preview_url }}
+            Editor URL: ${{ fromJson(steps.preview_deploy.outputs.theme_output_json).theme.editor_url }}
           token: ${{ secrets.GITHUB_TOKEN }}
