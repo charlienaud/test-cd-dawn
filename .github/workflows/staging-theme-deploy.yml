@@ -47,8 +47,13 @@ jobs:
         with:
           issue-number: ${{ github.event.pull_request.number }}
           body: |
-            Theme preview `${{ fromJson(steps.preview_deploy.outputs.theme_output_json).theme.name }}` successfully created
+            Theme preview `${{ fromJson(steps.preview_deploy.outputs.theme_output_json).theme.name }}` successfully created on the store `${{ fromJson(steps.preview_deploy.outputs.theme_output_json).theme.shop }}`
             
             Preview URL: ${{ fromJson(steps.preview_deploy.outputs.theme_output_json).theme.preview_url }}
             Editor URL: ${{ fromJson(steps.preview_deploy.outputs.theme_output_json).theme.editor_url }}
+            |             |     |
+            | ----------- | --- |
+            | Preview | ${{ fromJson(steps.preview_deploy.outputs.theme_output_json).theme.preview_url }}  |
+            | Editor | ${{ fromJson(steps.preview_deploy.outputs.theme_output_json).theme.editor_url }}  |
+
           token: ${{ secrets.GITHUB_TOKEN }}
