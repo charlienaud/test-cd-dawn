@@ -10,16 +10,20 @@ on:
     secrets:
       SHOPIFY_CLI_THEME_TOKEN:
         required: true
+    outputs:
+      theme_output_json:
+        value: ${{ jobs.deploy_preview.outputs.output1 }}
+        description: 'The output of the theme push command'
 
 
 jobs:
 
   # First job: Run tests in parallel
-  deploy-preview:
+  deploy_preview:
     name: Create the preview of the theme
     runs-on: ubuntu-latest
     outputs:
-      theme_output_json: ${{ steps.preview.outputs.theme_output_json }} # {"theme":{"id":158700077362,"name":"PR-1","role":"unpublished","shop":"yoozio-ci.myshopify.com","editor_url":"https://yoozio-ci.myshopify.com/admin/themes/158700077362/editor","preview_url":"https://yoozio-ci.myshopify.com/?preview_theme_id=158700077362"}}
+      output1: ${{ steps.preview.outputs.theme_output_json }} # {"theme":{"id":158700077362,"name":"PR-1","role":"unpublished","shop":"yoozio-ci.myshopify.com","editor_url":"https://yoozio-ci.myshopify.com/admin/themes/158700077362/editor","preview_url":"https://yoozio-ci.myshopify.com/?preview_theme_id=158700077362"}}
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3

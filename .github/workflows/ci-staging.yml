@@ -25,7 +25,8 @@ jobs:
           base: main
           flags: --fail-level=error
 
-  theme-upload:
+  theme_upload:
+    name: Theme Upload
     needs: 
       - theme-check
     uses: charlienaud/test-cd-dawn/.github/workflows/deploy-preview.yml@feature/first
@@ -38,7 +39,7 @@ jobs:
     name: Enrich the PR with jobs infos
     runs-on: ubuntu-latest
     needs:
-      - theme-upload
+      - theme_upload
     steps:
       - name: Add comment to PR
         uses: peter-evans/create-or-update-comment@v3
@@ -49,7 +50,7 @@ jobs:
             
             | Shop | Name | Preview | Editor |
             | ----- | ------ | -------- | ------ |
-            | ${{ fromJson(needs.theme-upload.outputs.theme_output_json).theme.shop }} | `${{ fromJson(needs.theme-upload.outputs.theme_output_json).theme.name }}` | ${{ fromJson(needs.theme-upload.outputs.theme_output_json).theme.preview_url }} | ${{ fromJson(needs.theme-upload.outputs.theme_output_json).theme.editor_url }}  |
+            | ${{ fromJson(needs.theme_upload.outputs.theme_output_json).theme.shop }} | `${{ fromJson(needs.theme_upload.outputs.theme_output_json).theme.name }}` | ${{ fromJson(needs.theme_upload.outputs.theme_output_json).theme.preview_url }} | ${{ fromJson(needs.theme_upload.outputs.theme_output_json).theme.editor_url }}  |
 
           token: ${{ secrets.GITHUB_TOKEN }}
 
