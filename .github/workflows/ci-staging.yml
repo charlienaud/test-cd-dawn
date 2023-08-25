@@ -1,4 +1,4 @@
-name: Theme preview deploy
+name: Theme preview deploy-shop-1
 
 on:
   pull_request:
@@ -25,13 +25,13 @@ jobs:
           base: main
           flags: --fail-level=error
 
-  deploy:
+  deploy-shop-1:
     name: Create the preview of the theme
     runs-on: ubuntu-latest
     needs:
       - theme-check
     outputs:
-      theme_output_json: ${{ steps.preview_deploy.outputs.theme_output_json }} # {"theme":{"id":158700077362,"name":"PR-1","role":"unpublished","shop":"yoozio-ci.myshopify.com","editor_url":"https://yoozio-ci.myshopify.com/admin/themes/158700077362/editor","preview_url":"https://yoozio-ci.myshopify.com/?preview_theme_id=158700077362"}}
+      theme_output_json: ${{ steps.preview.outputs.theme_output_json }} # {"theme":{"id":158700077362,"name":"PR-1","role":"unpublished","shop":"yoozio-ci.myshopify.com","editor_url":"https://yoozio-ci.myshopify.com/admin/themes/158700077362/editor","preview_url":"https://yoozio-ci.myshopify.com/?preview_theme_id=158700077362"}}
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
@@ -43,8 +43,8 @@ jobs:
           bundler: 'latest'
       - name: Install Shopify CLI
         run: npm install -g @shopify/cli @shopify/theme
-      - name: Deploy
-        id: preview_deploy
+      - name: deploy-shop-1
+        id: preview
         env:
           # Store URL, like your-store.myshopify.com
           SHOPIFY_FLAG_STORE: '${{ vars.SHOPIFY_STORE }}'
@@ -58,18 +58,18 @@ jobs:
     name: Enrich the PR with jobs infos
     runs-on: ubuntu-latest
     needs:
-      - deploy
+      - deploy-shop-1
     steps:
       - name: Add comment to PR
         uses: peter-evans/create-or-update-comment@v3
         with:
           issue-number: ${{ github.event.pull_request.number }}
           body: |
-            Theme preview `${{ fromJson(needs.deploy.outputs.theme_output_json).theme.name }}` successfully created on the store `${{ fromJson(needs.deploy.outputs.theme_output_json).theme.shop }}`
+            Theme preview successfully created
             
-            | Preview | Editor |
-            | ----------- | --- |
-            | ${{ fromJson(needs.deploy.outputs.theme_output_json).theme.preview_url }} | ${{ fromJson(needs.deploy.outputs.theme_output_json).theme.editor_url }}  |
+            | Shop | Name | Preview | Editor |
+            | ----- | ------ | -------- | ------ |
+            | ${{ fromJson(needs.deploy-shop-1.outputs.theme_output_json).theme.shop }} | `${{ fromJson(needs.deploy-shop-1.outputs.theme_output_json).theme.name }}` | ${{ fromJson(needs.deploy-shop-1.outputs.theme_output_json).theme.preview_url }} | ${{ fromJson(needs.deploy-shop-1.outputs.theme_output_json).theme.editor_url }}  |
 
           token: ${{ secrets.GITHUB_TOKEN }}
 
