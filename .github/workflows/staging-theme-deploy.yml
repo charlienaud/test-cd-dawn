@@ -34,9 +34,11 @@ jobs:
           # Password generated from Theme Access app
           SHOPIFY_CLI_THEME_TOKEN: ${{ secrets.SHOPIFY_CLI_THEME_TOKEN }}
           SHOPIFY_CLI_TTY: 0
-        run: shopify theme push --path "./" --unpublished --json --theme "PR-${{ github.event.pull_request.number }}"
+        run: shopify theme push --path "./" --unpublished --json --theme "PR-${{ github.event.pull_request.number }}" >> "$GITHUB_OUTPUT"
       # Output have the following structure {"theme":{"id":158700077362,"name":"PR-1","role":"unpublished","shop":"yoozio-ci.myshopify.com","editor_url":"https://yoozio-ci.myshopify.com/admin/themes/158700077362/editor","preview_url":"https://yoozio-ci.myshopify.com/?preview_theme_id=158700077362"}}
       # Comment the preview URL on the PR
+      - name: debug output
+        run: echo "${{ steps.preview_deploy.outputs }}"
       - name: Add preview URL to PR
         uses: peter-evans/create-or-update-comment@v3
         with:
