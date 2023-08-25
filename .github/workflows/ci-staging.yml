@@ -26,8 +26,30 @@ jobs:
           flags: --fail-level=error
 
   theme-upload:
+    needs: 
+      - theme-check
     uses: charlienaud/test-cd-dawn/.github/workflows/deploy-preview.yml@feature/first
     with:
       SHOPIFY_STORE: ${{ vars.SHOPIFY_STORE }}
     secrets:
       SHOPIFY_CLI_THEME_TOKEN: ${{ secrets.SHOPIFY_CLI_THEME_TOKEN }}
+
+  update-pr:
+    name: Enrich the PR with jobs infos
+    runs-on: ubuntu-latest
+    needs:
+      - theme-upload
+    steps:
+      - name: Add comment to PR
+        uses: peter-evans/create-or-update-comment@v3
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          body: |
+            Theme preview successfully created
+            
+            | Shop | Name | Preview | Editor |
+            | ----- | ------ | -------- | ------ |
+            | ${{ fromJson(needs.theme-upload.outputs.theme_output_json).theme.shop }} | `${{ fromJson(needs.theme-upload.outputs.theme_output_json).theme.name }}` | ${{ fromJson(needs.theme-upload.outputs.theme_output_json).theme.preview_url }} | ${{ fromJson(needs.theme-upload.outputs.theme_output_json).theme.editor_url }}  |
+
+          token: ${{ secrets.GITHUB_TOKEN }}
+
