@@ -26,7 +26,7 @@ jobs:
           flags: --fail-level=error
 
   theme-upload:
-    uses: charlienaud/test-cd-dawn/.github/workflows/deploy-preview@feature/first
+    uses: charlienaud/test-cd-dawn/.github/workflows/deploy-preview.yml@feature/first
     with:
       SHOPIFY_STORE: ${{ vars.SHOPIFY_STORE }}
     secrets:
