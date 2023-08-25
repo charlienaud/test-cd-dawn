@@ -7,6 +7,9 @@ on:
       SHOPIFY_STORE:
         required: true
         type: string
+      THEME_NAME:
+        required: true
+        type: string
     secrets:
       SHOPIFY_CLI_THEME_TOKEN:
         required: true
@@ -44,5 +47,5 @@ jobs:
           SHOPIFY_CLI_THEME_TOKEN: ${{ secrets.SHOPIFY_CLI_THEME_TOKEN }}
           SHOPIFY_CLI_TTY: 0
         run: |
-          THEME_OUTPUT_JSON=$(shopify theme push --path "./" --unpublished --json --theme "PR-${{ github.event.pull_request.number }}" | jq -s -c '.[0]') && \
+          THEME_OUTPUT_JSON=$(shopify theme push --path "./" --unpublished --json --theme "${{ inputs.THEME_NAME }}" | jq -s -c '.[0]') && \
           echo "theme_output_json=$THEME_OUTPUT_JSON" >> $GITHUB_OUTPUT

@@ -32,6 +32,7 @@ jobs:
     uses: charlienaud/test-cd-dawn/.github/workflows/deploy-preview.yml@feature/first
     with:
       SHOPIFY_STORE: ${{ vars.SHOPIFY_STORE }}
+      THEME_NAME: "PR-${{ github.event.pull_request.number }}"
     secrets:
       SHOPIFY_CLI_THEME_TOKEN: ${{ secrets.SHOPIFY_CLI_THEME_TOKEN }}
 
