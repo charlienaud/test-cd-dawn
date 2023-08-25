@@ -37,7 +37,7 @@ jobs:
           # Store URL, like your-store.myshopify.com
           SHOPIFY_FLAG_STORE: '${{ inputs.SHOPIFY_STORE }}'
           # Password generated from Theme Access app
-          SHOPIFY_CLI_THEME_TOKEN: ${{ inputs.SHOPIFY_CLI_THEME_TOKEN }}
+          SHOPIFY_CLI_THEME_TOKEN: ${{ secrets.SHOPIFY_CLI_THEME_TOKEN }}
           SHOPIFY_CLI_TTY: 0
         run: |
           THEME_OUTPUT_JSON=$(shopify theme push --path "./" --unpublished --json --theme "PR-${{ github.event.pull_request.number }}" | jq -s -c '.[0]') && \
