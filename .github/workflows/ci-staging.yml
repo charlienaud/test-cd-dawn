@@ -1,4 +1,4 @@
-name: Theme preview deploy-shop-1
+name: Theme preview
 
 on:
   pull_request:
@@ -25,51 +25,9 @@ jobs:
           base: main
           flags: --fail-level=error
 
-  deploy-shop-1:
-    name: Create the preview of the theme
-    runs-on: ubuntu-latest
-    needs:
-      - theme-check
-    outputs:
-      theme_output_json: ${{ steps.preview.outputs.theme_output_json }} # {"theme":{"id":158700077362,"name":"PR-1","role":"unpublished","shop":"yoozio-ci.myshopify.com","editor_url":"https://yoozio-ci.myshopify.com/admin/themes/158700077362/editor","preview_url":"https://yoozio-ci.myshopify.com/?preview_theme_id=158700077362"}}
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 18
-      - uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: 3.1
-          bundler: 'latest'
-      - name: Install Shopify CLI
-        run: npm install -g @shopify/cli @shopify/theme
-      - name: deploy-shop-1
-        id: preview
-        env:
-          # Store URL, like your-store.myshopify.com
-          SHOPIFY_FLAG_STORE: '${{ vars.SHOPIFY_STORE }}'
-          # Password generated from Theme Access app
-          SHOPIFY_CLI_THEME_TOKEN: ${{ secrets.SHOPIFY_CLI_THEME_TOKEN }}
-          SHOPIFY_CLI_TTY: 0
-        run: |
-          THEME_OUTPUT_JSON=$(shopify theme push --path "./" --unpublished --json --theme "PR-${{ github.event.pull_request.number }}" | jq -s -c '.[0]') && \
-          echo "theme_output_json=$THEME_OUTPUT_JSON" >> $GITHUB_OUTPUT
-  update-pr:
-    name: Enrich the PR with jobs infos
-    runs-on: ubuntu-latest
-    needs:
-      - deploy-shop-1
-    steps:
-      - name: Add comment to PR
-        uses: peter-evans/create-or-update-comment@v3
-        with:
-          issue-number: ${{ github.event.pull_request.number }}
-          body: |
-            Theme preview successfully created
-            
-            | Shop | Name | Preview | Editor |
-            | ----- | ------ | -------- | ------ |
-            | ${{ fromJson(needs.deploy-shop-1.outputs.theme_output_json).theme.shop }} | `${{ fromJson(needs.deploy-shop-1.outputs.theme_output_json).theme.name }}` | ${{ fromJson(needs.deploy-shop-1.outputs.theme_output_json).theme.preview_url }} | ${{ fromJson(needs.deploy-shop-1.outputs.theme_output_json).theme.editor_url }}  |
-
-          token: ${{ secrets.GITHUB_TOKEN }}
-
+  theme-upload:
+    uses: charlienaud/test-cd-dawn/.github/workflows/deploy-preview@feature/first
+    with:
+      SHOPIFY_STORE: ${{ vars.SHOPIFY_STORE }}
+    secrets:
+      SHOPIFY_CLI_THEME_TOKEN: ${{ secrets.SHOPIFY_CLI_THEME_TOKEN }}
