@@ -13,6 +13,8 @@ jobs:
   theme-check:
     name: Theme Check
     runs-on: ubuntu-latest
+    # ensure this branch have a PR opened
+    if: github.event.pull_request && github.event.pull_request.number
     steps:
       - uses: actions/checkout@v3
       - name: Theme Check
