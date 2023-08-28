@@ -47,6 +47,6 @@ jobs:
           SHOPIFY_CLI_THEME_TOKEN: ${{ secrets.SHOPIFY_CLI_THEME_TOKEN }}
           SHOPIFY_CLI_TTY: 0
         run: |
-          shopify theme delete --theme "${{ inputs.THEME_NAME }}
+          shopify theme delete --theme "${{ inputs.THEME_NAME }}"
           THEME_OUTPUT_JSON=$(shopify theme push --path "./" --unpublished --json --theme "${{ inputs.THEME_NAME }}" | jq -s -c '.[0]') && \
           echo "theme_output_json=$THEME_OUTPUT_JSON" >> $GITHUB_OUTPUT
