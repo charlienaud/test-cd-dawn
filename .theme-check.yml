@@ -1,4 +1,87 @@
-MatchingTranslations:
-  enabled: false
+ConvertIncludeToRender:
+  severity: suggestion
+LiquidTag:
+  severity: suggestion
+  min_consecutive_statements: 5
+MissingTemplate:
+  severity: suggestion
+  ignore_missing: []
+NestedSnippet:
+  severity: suggestion
+  max_nesting_level: 3
+RequiredLayoutThemeObject:
+  severity: error
+SpaceInsideBraces:
+  severity: style
+SyntaxError:
+  severity: error
 TemplateLength:
-  enabled: false
+  severity: suggestion
+  max_length: 600
+  exclude_schema: true
+  exclude_stylesheet: true
+  exclude_javascript: true
+UnknownFilter:
+  severity: error
+UnusedAssign:
+  severity: suggestion
+UnusedSnippet:
+  severity: suggestion
+MatchingSchemaTranslations:
+  severity: suggestion
+MatchingTranslations:
+  severity: suggestion
+DefaultLocale:
+  severity: suggestion
+TranslationKeyExists:
+  severity: error
+ValidHTMLTranslation:
+  severity: suggestion
+ValidJson:
+  severity: error
+ValidSchema:
+  severity: error
+MissingRequiredTemplateFiles:
+  severity: error
+UndefinedObject:
+  severity: error
+  exclude_snippets: true
+  config_type: default
+RequiredDirectories:
+  severity: error
+DeprecatedFilter:
+  severity: suggestion
+DeprecateLazysizes:
+  severity: suggestion
+DeprecateBgsizes:
+  severity: suggestion
+MissingEnableComment:
+  severity: error
+ParserBlockingJavaScript:
+  severity: error
+ParserBlockingScriptTag:
+  severity: error
+AssetPreload:
+  severity: suggestion
+ImgWidthAndHeight:
+  severity: error
+RemoteAsset:
+  severity: suggestion
+AssetUrlFilters:
+  severity: suggestion
+ContentForHeaderModification:
+  severity: error
+ImgLazyLoading:
+  severity: suggestion
+HtmlParsingError:
+  severity: error
+PaginationSize:
+  severity: suggestion
+  min_size: 1
+  max_size: 50
+DeprecatedGlobalAppBlockType:
+  severity: error
+SchemaJsonFormat:
+  severity: style
+  start_level: 0
+  indent: '  '
