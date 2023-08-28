@@ -1,0 +1,24 @@
+name: Theme preview
+
+on:
+  push:
+    branches-ignore: 
+      - main
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  theme-check:
+    name: Theme Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Theme Check
+        uses: shopify/theme-check-action@v1
+        with:
+          theme_root: '.'
+          token: ${{ secrets.GITHUB_TOKEN }}
+          base: main
+          flags: --fail-level=error
