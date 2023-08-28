@@ -1,0 +1,53 @@
+name: Theme preview
+
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  theme_upload_store_1:
+    name: Theme Upload Store 1
+    uses: charlienaud/test-cd-dawn/.github/workflows/deploy-preview.yml@feature/first
+    with:
+      SHOPIFY_STORE: ${{ vars.SHOPIFY_STORE }}
+      THEME_NAME: "PR-${{ github.event.pull_request.number }}"
+    secrets:
+      SHOPIFY_CLI_THEME_TOKEN: ${{ secrets.SHOPIFY_CLI_THEME_TOKEN }}
+
+  theme_upload_store_2:
+    name: Theme Upload Store 2
+    uses: charlienaud/test-cd-dawn/.github/workflows/deploy-preview.yml@feature/first
+    with:
+      SHOPIFY_STORE: ${{ vars.SHOPIFY_STORE_2 }}
+      THEME_NAME: "PR-${{ github.event.pull_request.number }}"
+    secrets:
+      SHOPIFY_CLI_THEME_TOKEN: ${{ secrets.SHOPIFY_CLI_THEME_TOKEN_2 }}
+
+  update-pr:
+    name: Enrich the PR with jobs infos
+    runs-on: ubuntu-latest
+    needs:
+      - theme_upload_store_1
+      - theme_upload_store_2
+    steps:
+      - name: Add comment to PR
+        uses: peter-evans/create-or-update-comment@v3
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          body: |
+            Theme preview successfully created
+            
+            | Shop | Name | Preview | Editor |
+            | ----- | ------ | -------- | ------ |
+            | ${{ fromJson(needs.theme_upload_store_1.outputs.theme_output_json).theme.shop }} | `${{ fromJson(needs.theme_upload_store_1.outputs.theme_output_json).theme.name }}` | ${{ fromJson(needs.theme_upload_store_1.outputs.theme_output_json).theme.preview_url }} | ${{ fromJson(needs.theme_upload_store_1.outputs.theme_output_json).theme.editor_url }}  |
+            | ${{ fromJson(needs.theme_upload_store_2.outputs.theme_output_json).theme.shop }} | `${{ fromJson(needs.theme_upload_store_2.outputs.theme_output_json).theme.name }}` | ${{ fromJson(needs.theme_upload_store_2.outputs.theme_output_json).theme.preview_url }} | ${{ fromJson(needs.theme_upload_store_2.outputs.theme_output_json).theme.editor_url }}  |
+
+          token: ${{ secrets.GITHUB_TOKEN }}
+

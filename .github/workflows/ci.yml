@@ -1,7 +1,13 @@
-name: CI
+name: Theme preview
 
 on:
-  pull_request:
+  push:
+    branches-ignore: 
+      - main
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
 
 jobs:
   theme-check:
@@ -12,4 +18,7 @@ jobs:
       - name: Theme Check
         uses: shopify/theme-check-action@v1
         with:
-          token: ${{ github.token }}
+          theme_root: '.'
+          token: ${{ secrets.GITHUB_TOKEN }}
+          base: main
+          flags: --fail-level=error

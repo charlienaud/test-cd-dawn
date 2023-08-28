@@ -1,0 +1,52 @@
+# This workflow aim to upload the theme to a store as a preview
+name: Theme Preview Deploy
+
+on:
+  workflow_call:
+    inputs:
+      SHOPIFY_STORE:
+        required: true
+        type: string
+      THEME_NAME:
+        required: true
+        type: string
+    secrets:
+      SHOPIFY_CLI_THEME_TOKEN:
+        required: true
+    outputs:
+      theme_output_json:
+        value: ${{ jobs.deploy_preview.outputs.output1 }}
+        description: 'The output of the theme push command'
+
+
+jobs:
+
+  # First job: Run tests in parallel
+  deploy_preview:
+    name: Create the preview of the theme
+    runs-on: ubuntu-latest
+    outputs:
+      output1: ${{ steps.preview.outputs.theme_output_json }} # {"theme":{"id":158700077362,"name":"PR-1","role":"unpublished","shop":"yoozio-ci.myshopify.com","editor_url":"https://yoozio-ci.myshopify.com/admin/themes/158700077362/editor","preview_url":"https://yoozio-ci.myshopify.com/?preview_theme_id=158700077362"}}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.1
+          bundler: 'latest'
+      - name: Install Shopify CLI
+        run: npm install -g @shopify/cli @shopify/theme
+      - name: Upload theme to Shopify
+        id: preview
+        env:
+          # Store URL, like your-store.myshopify.com
+          SHOPIFY_FLAG_STORE: '${{ inputs.SHOPIFY_STORE }}'
+          # Password generated from Theme Access app
+          SHOPIFY_CLI_THEME_TOKEN: ${{ secrets.SHOPIFY_CLI_THEME_TOKEN }}
+          SHOPIFY_CLI_TTY: 0
+        run: |
+          shopify theme delete --theme "${{ inputs.THEME_NAME }}" || true && \
+          THEME_OUTPUT_JSON=$(shopify theme push --path "./" --unpublished --json --theme "${{ inputs.THEME_NAME }}" | jq -s -c '.[0]') && \
+          echo "theme_output_json=$THEME_OUTPUT_JSON" >> $GITHUB_OUTPUT
