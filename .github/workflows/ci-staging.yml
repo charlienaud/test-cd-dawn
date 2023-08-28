@@ -14,7 +14,6 @@ jobs:
     name: Theme Check
     runs-on: ubuntu-latest
     # ensure this branch have a PR opened
-    if: github.event.pull_request && github.event.pull_request.number
     steps:
       - uses: actions/checkout@v3
       - name: Theme Check
@@ -22,8 +21,8 @@ jobs:
         with:
           theme_root: '.'
           token: ${{ secrets.GITHUB_TOKEN }}
-          # base: main
-          # flags: --fail-level=error
+          base: main
+          flags: --fail-level=error
 
   # theme_upload_store_1:
   #   name: Theme Upload Store 1
