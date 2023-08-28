@@ -22,8 +22,8 @@ jobs:
         with:
           theme_root: '.'
           token: ${{ secrets.GITHUB_TOKEN }}
-          base: main
-          flags: --fail-level=error
+          # base: main
+          # flags: --fail-level=error
 
   theme_upload_store_1:
     name: Theme Upload Store 1

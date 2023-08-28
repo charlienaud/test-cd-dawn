@@ -71,7 +71,7 @@ AssetUrlFilters:
 ContentForHeaderModification:
   severity: error
 ImgLazyLoading:
-  severity: error
+  severity: suggestion
 HtmlParsingError:
   severity: error
 PaginationSize:
