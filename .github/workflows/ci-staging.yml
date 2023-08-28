@@ -1,25 +1,9 @@
 name: Theme preview
 
 on:
-  pull_request:
-    types:
-        - opened
-        - synchronize
-        - reopened
-
-permissions:
-  actions: read
-  checks: write
-  contents: read
-  deployments: read
-  issues: read
-  discussions: read
-  packages: read
-  pages: read
-  pull-requests: read
-  repository-projects: read
-  security-events: read
-  statuses: read
+  push:
+    branches-ignore: 
+      - main
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
